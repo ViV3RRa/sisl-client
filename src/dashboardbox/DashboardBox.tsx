@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableColumn from '@material-ui/core/TableCell';
@@ -50,6 +50,13 @@ export const DashboardBox: FC<DashboardBoxProps> = (
     return timeStr;
   };
 
+  useEffect(() => {
+    if(dataArr !== undefined && dataArr[dataArr.length-1] !== undefined) {
+      setCrosshairTime(getDateString(dataArr[dataArr.length-1].x));
+      setCrosshairValue(dataArr[dataArr.length-1].y);
+    }
+  }, [props.items]);
+
   const showResourceFinder = () => {
     props.fetchResources();
     setResourceFinderOpen(true);
@@ -92,7 +99,7 @@ export const DashboardBox: FC<DashboardBoxProps> = (
               color="primary"
               gutterBottom
             >
-              {(crosshairTime !== undefined ? crosshairTime : '') + ': '}
+              {crosshairTime !== undefined ? (crosshairTime + ': ') : ''}
             </Typography>
           </TableColumn>
           <TableColumn 
@@ -137,6 +144,10 @@ export const DashboardBox: FC<DashboardBoxProps> = (
         {title}
         {props.items.length > 0 && (
           <FlexibleWidthXYPlot
+          onMouseLeave={(event) => {
+            setCrosshairTime(getDateString(dataArr[dataArr.length-1].x));
+            setCrosshairValue(dataArr[dataArr.length-1].y);
+          }}
           margin={{left:70, right:70}}
           yDomain={[dataArr[0].y-20, dataArr[dataArr.length-1].y+20]}
           height={500}>
@@ -146,8 +157,8 @@ export const DashboardBox: FC<DashboardBoxProps> = (
             <YAxis title={"Platform value in " + ('eur' === props.items[0].currency ? '€' : 'dkk')} />
             <LineSeries 
               onNearestX={(value, {index}) => {
-                setCrosshairTime(getDateString(dataArr[index].x))
-                setCrosshairValue(dataArr[index].y)
+                setCrosshairTime(getDateString(dataArr[index].x));
+                setCrosshairValue(dataArr[index].y);
               }}
               data={dataArr}
               style={{fill: 'none', stroke: '#4169e1', strokeWidth: 2}}
