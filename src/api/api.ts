@@ -1,6 +1,6 @@
 import { AccountValue } from "../customtypes";
 
-const serverUrl = 'http://localhost:8080/SiSL';
+const serverUrl = 'http://192.168.1.30:8080/SiSL';
 //const serverUrl = 'http://localhost:8080';
 
 export const getAllAccountValues: () => Promise<AccountValue[]> = async () => {
