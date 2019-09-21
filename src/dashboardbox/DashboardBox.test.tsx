@@ -12,6 +12,7 @@ it('renders without crashing (enzyme)', () => {
       fetching={false}
       resources={[]}
       resourceFinderItems={{}}
+      crosshairValues={[]}
       fetchResources={() => {}}
     />,
     { context: {} }

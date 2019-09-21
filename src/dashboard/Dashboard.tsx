@@ -76,6 +76,7 @@ export const Dashboard: FC<DashboardProps> = (props: DashboardProps) => {
                 items={accountValues.data}
                 resources={[]}
                 resourceFinderItems={[]}
+                crosshairValues={[]}
                 fetchResources={() => {}}
               />
             </Grid>
@@ -93,6 +94,7 @@ export const Dashboard: FC<DashboardProps> = (props: DashboardProps) => {
                       items={[]}
                       resources={[]}
                       resourceFinderItems={[]}
+                      crosshairValues={[]}
                       fetchResources={() => {}}
                     />
                   </Paper>
@@ -107,6 +109,7 @@ export const Dashboard: FC<DashboardProps> = (props: DashboardProps) => {
                       items={[]}
                       resources={[]}
                       resourceFinderItems={[]}
+                      crosshairValues={[]}
                       fetchResources={() => {}}
                     />
                   </Paper>
@@ -123,6 +126,7 @@ export const Dashboard: FC<DashboardProps> = (props: DashboardProps) => {
                   items={[]}
                   resources={[]}
                   resourceFinderItems={[]}
+                  crosshairValues={[]}
                   fetchResources={() => {}}
                 />
               </Paper>

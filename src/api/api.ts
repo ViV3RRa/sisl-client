@@ -1,14 +1,14 @@
 import { AccountValue } from "../customtypes";
 
-const serverUrl = 'http://localhost:8080/SiSL';
-//const serverUrl = 'http://localhost:8080';
+//const serverUrl = 'http://localhost:8080/SiSL';
+  const serverUrl = 'http://localhost:8080';
 
 export const getAllAccountValues: () => Promise<AccountValue[]> = async () => {
   const accountValues: AccountValue[] = [];
   try {
     const result = await fetch(
       serverUrl +
-        '/accountvalue'
+      '/accountvalue'
     );
 
     const jsonResult = await result.json();
