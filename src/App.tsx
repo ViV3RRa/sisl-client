@@ -1,33 +1,51 @@
-import React, { useState } from 'react';
-import { Button} from 'react-bootstrap';
-import logo from './logo.svg';
-import './App.css';
+import React, { FC } from 'react';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
+import { DashboardComponent } from './dashboard/DashboardComponent';
+import { Login } from './auth/Login';
+//import { OverviewComponent } from './overview/OverviewComponent';
+//import { MeasurementsComponent } from './measurements/MeasurementsComponent';
+import { ThemeProvider } from '@material-ui/styles';
+import { create } from 'jss';
+import { StylesProvider, jssPreset } from '@material-ui/styles';
+import { theme } from './theme';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { paths } from './router';
+import { IntlProvider, addLocaleData } from 'react-intl';
+import locale_da from 'react-intl/locale-data/da';
+import locale_en from 'react-intl/locale-data/en';
+import messages_da from './translations/da.json';
+import messages_en from './translations/en.json';
 
-const App: React.FC = () => {
-  const [data, setData] = useState("Hest");
+// Set up localization
+const locale = 'da';
+addLocaleData([...locale_da, ...locale_en]);
+const messages = {
+  da: messages_da,
+  en: messages_en
+};
 
-  function buttonClick() {
-    fetch('http://localhost:8080/accountvalue/search?to=1553310001000')
-        .then(res => res.json())
-        .then((result) => {
-          const items = result.map((item: any, key: any) => <div key={item.id}>{item.accountValue}</div>);
-          console.log(JSON.stringify(result));
-          setData(items);
-        })
-        .catch(console.log);
-  };
+const jss = create({
+  ...jssPreset(),
+  insertionPoint: document.getElementById('jss-insertion-point') as HTMLElement
+});
 
+const App: FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <div>
-          {data}
-        </div>
-        <Button onClick={buttonClick} />
-      </header>
-    </div>
+    <IntlProvider locale={locale} messages={messages[locale]}>
+      <StylesProvider jss={jss}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Router>
+            <div className="App">
+              <Route path={paths.dashboard} component={DashboardComponent} />
+              <Route path={paths.login} component={Login} />
+              <Redirect from={paths.base} to={paths.dashboard} />
+            </div>
+          </Router>
+        </ThemeProvider>
+      </StylesProvider>
+    </IntlProvider>
   );
-}
+};
 
 export default App;

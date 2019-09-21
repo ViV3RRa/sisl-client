@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly with custom color 1`] = `ShallowWrapper {}`;
+
+exports[`renders correctly with default color 1`] = `ShallowWrapper {}`;

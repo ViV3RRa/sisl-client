@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders without crashing (enzyme) 1`] = `
+"<Fragment>
+  <WithStyles(ForwardRef(TableRow))>
+    <WithStyles(ForwardRef(TableCell)) />
+    <WithStyles(ForwardRef(TableCell)) align=\\"right\\" />
+  </WithStyles(ForwardRef(TableRow))>
+</Fragment>"
+`;
