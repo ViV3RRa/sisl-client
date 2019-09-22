@@ -11,8 +11,9 @@ import { SislIcon } from '../icons/sislIcon/SislIcon';
 import { useStyles } from './DashboardBox.style';
 import Typography from '@material-ui/core/Typography';
 import { AccountValue } from '../customtypes';
-import {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, FlexibleWidthXYPlot} from 'react-vis';
+import {XYPlot, XAxis, YAxis, VerticalGridLines, HorizontalGridLines, LineSeries, FlexibleWidthXYPlot, Crosshair} from 'react-vis';
 import { background } from '@storybook/theming';
+import 'react-vis/dist/style.css'
 
 interface DashboardBoxProps {
   title: string;
@@ -29,19 +30,18 @@ interface DashboardBoxProps {
 export const DashboardBox: FC<DashboardBoxProps> = (
   props: DashboardBoxProps
 ) => {
-  const [crosshairValue, setCrosshairValue] = useState();
-  const [crosshairTime, setCrosshairTime] = useState();
+  const [crosshair, setCrosshair] = useState();
   const styles = useStyles();
 
   const [isResourceFinderOpen, setResourceFinderOpen] = useState<boolean>(
     false
   );
 
-  var values: any = [];
-
   const dataArr = props.items.map((data)=> {
     return {x: data.time , 
-    y: (data.accountValue/100)}
+    y: (data.accountValue/100),
+    account: data.accountId,
+    color: 'green'}
   });
 
   const getDateString = (timestamp: number) => {
@@ -52,8 +52,7 @@ export const DashboardBox: FC<DashboardBoxProps> = (
 
   useEffect(() => {
     if(dataArr !== undefined && dataArr[dataArr.length-1] !== undefined) {
-      setCrosshairTime(getDateString(dataArr[dataArr.length-1].x));
-      setCrosshairValue(dataArr[dataArr.length-1].y);
+      setCrosshair(dataArr[dataArr.length-1]);
     }
   }, [props.items]);
 
@@ -86,36 +85,6 @@ export const DashboardBox: FC<DashboardBoxProps> = (
               {props.title}
             </Typography>
           </TableColumn>
-          <TableColumn 
-            style={{
-              width: 200,
-              textAlign:"right",
-              margin:0,
-              padding:0
-            }}>
-            <Typography
-              component="h5"
-              variant="h6"
-              color="primary"
-              gutterBottom
-            >
-              {crosshairTime !== undefined ? (crosshairTime + ': ') : ''}
-            </Typography>
-          </TableColumn>
-          <TableColumn 
-            style={{
-              width: 200,
-              textAlign:"left"
-            }}>
-            <Typography
-              component="h5"
-              variant="h6"
-              color="primary"
-              gutterBottom
-            >
-              {(crosshairValue !== undefined ? (crosshairValue + ' €') : '')}
-            </Typography>
-          </TableColumn>
           {button}
         </TableRow>
       </TableBody>
@@ -145,24 +114,25 @@ export const DashboardBox: FC<DashboardBoxProps> = (
         {props.items.length > 0 && (
           <FlexibleWidthXYPlot
           onMouseLeave={(event) => {
-            setCrosshairTime(getDateString(dataArr[dataArr.length-1].x));
-            setCrosshairValue(dataArr[dataArr.length-1].y);
+            setCrosshair(dataArr[dataArr.length-1]);
           }}
           margin={{left:70, right:70}}
           yDomain={[dataArr[0].y-20, dataArr[dataArr.length-1].y+20]}
           height={500}>
-            <VerticalGridLines />
             <HorizontalGridLines style={{stroke: '#f5f5f5', strokeWidth: 1}} />
             <XAxis tickTotal={5} tickFormat={v => `${getDateString(v)}`} />
-            <YAxis title={"Platform value in " + ('eur' === props.items[0].currency ? '€' : 'dkk')} />
+            <YAxis hideLine={true} title={"Platform value in " + ('eur' === props.items[0].currency ? '€' : 'dkk')} />
             <LineSeries 
               onNearestX={(value, {index}) => {
-                setCrosshairTime(getDateString(dataArr[index].x));
-                setCrosshairValue(dataArr[index].y);
+                setCrosshair(dataArr[index]);
               }}
               data={dataArr}
               style={{fill: 'none', stroke: '#4169e1', strokeWidth: 2}}
             />
+            <Crosshair 
+              values={[crosshair]}
+              titleFormat={(d: any[]) => ({title: 'Date', value: getDateString(d[0].x)})}
+            itemsFormat={(d: any[]) => [{title: <span><div style={{width: 10, height: 10, background: d[0].color, display: 'inline-block', marginRight: 5}}/>{'Mintos'}</span>, value: <div style={{display: 'inline-block'}}>{d[0].y}</div>}]} />
           </FlexibleWidthXYPlot>
         )}
       </div>

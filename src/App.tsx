@@ -17,7 +17,7 @@ import messages_da from './translations/da.json';
 import messages_en from './translations/en.json';
 
 // Set up localization
-const locale = 'da';
+const locale = 'en';
 addLocaleData([...locale_da, ...locale_en]);
 const messages = {
   da: messages_da,
